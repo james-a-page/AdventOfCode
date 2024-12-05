@@ -1,6 +1,5 @@
 module Main where
 import Data.List (sortBy)
-import Data.List.NonEmpty (sortWith)
 import GHC.Utils.Misc
 
 main :: IO ()
@@ -24,8 +23,6 @@ checkAfterBreak rules x = any (\y -> (y,x) `elem` rules)
 checkPriorBreak :: [(Int, Int)] -> Int -> [Int] -> Bool
 checkPriorBreak rules x = any (\y -> (x,y) `elem` rules)
 
-getMidValue :: [Int] -> Int
-getMidValue list = list !! (length list `div` 2)
 
 -- Part 2
 part2 :: [(Int,Int)] -> [[Int]] -> Int
@@ -42,18 +39,18 @@ sortWithRules rules = sortBy rulesComparison
             | (b,a) `elem` rules = GT
             | otherwise = EQ
 
-
 -- Utils
 -- Lines -> (List of rules, List of orderings)
 parse :: [String] -> ([(Int,Int)], [[Int]])
-parse = foldl parseLine ([],[])
-
-
-parseLine :: ([(Int,Int)], [[Int]]) -> String -> ([(Int,Int)], [[Int]])
-parseLine (currRules, currOrderings) line
-    | '|' `elem` line = (currRules ++ [(strToInt $ head (split '|' line), strToInt $ last (split '|' line))], currOrderings)
-    | ',' `elem` line = (currRules, currOrderings ++ [map strToInt $ split ',' line])
-    | otherwise = (currRules, currOrderings)
+parse = foldl parseLine ([],[]) 
+    where
+        parseLine (currRules, currOrderings) line
+            | '|' `elem` line = (currRules ++ [(strToInt $ head (split '|' line), strToInt $ last (split '|' line))], currOrderings)
+            | ',' `elem` line = (currRules, currOrderings ++ [map strToInt $ split ',' line])
+            | otherwise = (currRules, currOrderings)
+            
+getMidValue :: [Int] -> Int
+getMidValue list = list !! (length list `div` 2)
 
 strToInt :: String -> Int
 strToInt x = read x :: Int
