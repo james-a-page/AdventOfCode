@@ -8,7 +8,6 @@ main = do
     print $ part1 left right
     print $ part2 left right
 
--- part1 :: String -> Int
 part1 :: (Num a, Ord a) => [a] -> [a] -> a
 part1 left right = 
     sum (zipWith absDiff (sort left) (sort right))
